@@ -13,15 +13,40 @@ Preencha as linhas abaixo com o nome e o e-mail dos integrantes do
 grupo.  Substitua XX pela contribuição de cada membro do grupo no
 desenvolvimento do trabalho.
 
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
+Nome <danielcoutinho00@gmail.com> 100%
 
 3. Referências bibliográficas
 
-Adicione aqui as referências bibliográficas.
+	Manual de comandos linux
 
 4. Estruturas de dados
 
-Descreva e justifique as estruturas de dados e algoritmos utilizados
-em sua solução.
+EXEC:
+	O primeiro passo do algorítmo é utilizar a função access para
+verificar o acesso ao comando no diretório local. Caso este comando exista
+neste diretório, ele será executado com a utilização da função execv. Caso
+contrário, adiciona-se ao comando o prefixo "/bin/" para que o comando seja
+ procurado no diretório raiz. Assim, executa-se outro if verificando o acesso
+ ao novo local do comando. Caso o acesso falhe, será exibido ao usuário o texto
+ "Comando não encontrado". Caso contrário, o comando será executado utilizando
+ a função execv.
+ 
+REDIRECT:
+
+	Nessa parte do código, fecha-se os arquivos abertos com o descritor a
+ser utilizado. Após isso, abre-se os arquivos com as flags correspondentes de acordo
+com o tipo ("<" ou ">") além de conter a flag 0666 para conceder permissões de escrita
+e leitura do arquivo. Caso o processo de abertura do arquivo falhe, é mostrado ao usuário
+o texto "Falha a abrir o arquivo" e é executado o comando exit(0);
+
+PIPES:
+
+	Por fim, para a implementação dos pipes, utilizou-se inicialmente a função pipe() que
+recebe como parâmetro a variável p (vetor de inteiros com 2 espaços) que aloca os valores dos
+descritores de arquivo referentes à leitura [0] e escrita [1] do pipe. Caso o if detecte erro
+na criação do pipe, o usuário é informado com o texto "O pipe falhou" e o processo finaliza com
+exit(0). Caso contrario, cria-se os processos pai e filho utilizando a função fork(). Inicialmente
+verifica-se se o processo em execução é o filho fazendo a comparação fork() == 0. Caso seja, é fe-
+chado o terminal de leitura do pipe. Após isso, é duplicado o descritor de arquivos do terminal de
+escrita utilizando-se a função dup() e, em seguida, o terminal de escrita é fechado também. A
+

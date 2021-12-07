@@ -98,7 +98,8 @@ runcmd(struct cmd *cmd)
      * comando com redirecionamento. */
     close(rcmd->fd);
     if(open(rcmd->file, rcmd->mode, 0666) < 0){
-      fprintf(stderr, "Não foi possível encontrar o arquivo");
+      fprintf(stderr, "Falha a abrir o arquivo");
+      exit(0);
     }
     /* MARK END task3 */
     runcmd(rcmd->cmd);
@@ -115,13 +116,11 @@ runcmd(struct cmd *cmd)
     }
     if(fork() == 0){
       close(p[0]);
-      close(1);
       dup(p[1]);
       close(p[1]);
       runcmd(pcmd->left);
     } else {
       close(p[1]);
-      close(0);
       dup(p[0]);
       close(p[0]);
       runcmd(pcmd->right);
