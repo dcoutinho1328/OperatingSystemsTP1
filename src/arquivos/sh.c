@@ -8,9 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-/* MARK NAME Seu Nome Aqui */
-/* MARK NAME Nome de Outro Integrante Aqui */
-/* MARK NAME E Etc */
+/* MARK NAME Daniel Rodrigues Coutinho */
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -56,7 +54,7 @@ struct cmd *parsecmd(char*); // Processar o linha de comando.
 void
 runcmd(struct cmd *cmd)
 {
-  int p[2], r;
+  int p[2];
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
   struct redircmd *rcmd;
@@ -82,7 +80,6 @@ runcmd(struct cmd *cmd)
       char path[216];
       strcpy(path, "/bin/");
       strcat(path, ecmd->argv[0]);
-      fprintf(stderr, " %s aaa %s ", path, ecmd->argv[0]);
       if(!access(path, F_OK)){
         execv(path, ecmd->argv);
       } else {
@@ -99,7 +96,10 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    fprintf(stderr, "redir nao implementado\n");
+    close(rcmd->fd);
+    if(open(rcmd->file, rcmd->mode, 0666) < 0){
+      fprintf(stderr, "Não foi possível encontrar o arquivo");
+    }
     /* MARK END task3 */
     runcmd(rcmd->cmd);
     break;
@@ -109,7 +109,23 @@ runcmd(struct cmd *cmd)
     /* MARK START task4
      * TAREFA4: Implemente codigo abaixo para executar
      * comando com pipes. */
-    fprintf(stderr, "pipe nao implementado\n");
+    if(pipe(p) < 0){
+      fprintf(stderr, "O pipe falhou");
+      exit(0);
+    }
+    if(fork() == 0){
+      close(p[0]);
+      close(1);
+      dup(p[1]);
+      close(p[1]);
+      runcmd(pcmd->left);
+    } else {
+      close(p[1]);
+      close(0);
+      dup(p[0]);
+      close(p[0]);
+      runcmd(pcmd->right);
+    }
     /* MARK END task4 */
     break;
   }    
