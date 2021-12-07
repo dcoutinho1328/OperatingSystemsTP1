@@ -82,7 +82,6 @@ runcmd(struct cmd *cmd)
       char path[216];
       strcpy(path, "/bin/");
       strcat(path, ecmd->argv[0]);
-      fprintf(stderr, " %s aaa %s ", path, ecmd->argv[0]);
       if(!access(path, F_OK)){
         execv(path, ecmd->argv);
       } else {
